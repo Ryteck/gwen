@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import Style from '../styles/components/CheckBox'
+import Style from '../styles/components/checkBoxComponentStyle'
 import { FaRegSquare, FaRegCheckSquare } from 'react-icons/fa'
 
 interface CheckBoxProps {

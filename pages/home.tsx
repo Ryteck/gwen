@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import MyHead from '../components/myHead'
-import Style from '../styles/pages/home'
+import MyHead from '../components/myHeadComponent'
+import Style from '../styles/pages/homePageStyle'
 
 const Home: FC = () => {
   return (

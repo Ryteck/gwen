@@ -1,8 +1,8 @@
 import { FC, FormEvent, useState } from 'react'
 import { useRouter } from 'next/router'
-import CheckBox from '../components/checkBox'
-import MyHead from '../components/myHead'
-import Style from '../styles/pages/index'
+import CheckBox from '../components/checkBoxComponent'
+import MyHead from '../components/myHeadComponent'
+import Style from '../styles/pages/indexPageStyle'
 
 const Index: FC = () => {
   const [getUsername, setUsername] = useState('')
