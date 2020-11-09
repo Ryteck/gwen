@@ -66,6 +66,7 @@ const store: NextApiHandler = async (req, res) => {
       .hset(username, 'lastname', lastname)
       .hset(username, 'password', crypto.generateDefaultPassword())
       .hset(username, 'avatar', 'default_avatar.jpg')
+      .hset(username, 'administrador', 'false')
       .exec()
     res.status(201).json(data)
   } catch (error) {

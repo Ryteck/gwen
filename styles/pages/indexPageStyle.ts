@@ -46,6 +46,7 @@ input[type=submit] {
         width: 125px;
         border-color: var(--color-secondary-pure);
         box-shadow: 0 0 100px var(--color-secondary-pure);
+        background-color: var(--color-secondary-pure);
     }
 }
 

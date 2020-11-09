@@ -2,12 +2,13 @@ import UserModel from '../models/userModel'
 
 const userView = {
   render (user: UserModel) {
-    const { username, firstname, lastname, avatar } = user
+    const { username, firstname, lastname, avatar, administrador } = user
     return {
       username,
       firstname,
       lastname,
-      avatar
+      avatar,
+      administrador: administrador === 'true'
     }
   },
   renderMany (users: Array<UserModel>) {
