@@ -19,7 +19,7 @@ const Global = createGlobalStyle`
 
 * {
     color: var(--color-background-light);
-    font-family: 'Dosis', 'Arial';
+    font-family: 'Dosis', 'Arial', 'sans-serif';
     margin: 0;
     padding: 0;
     box-sizing: border-box;

@@ -1,5 +1,5 @@
 import Redis from 'ioredis'
-import redisConfig from '../configs/redisConfig'
+import redisConfig from '../config/redisConfig'
 
 const { host, port, pass } = redisConfig
 

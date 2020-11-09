@@ -1,6 +1,6 @@
 import UserInterface from '../interfaces/userInterface'
 
-class UserEntity implements UserInterface {
+class UserModel implements UserInterface {
     username: string;
     firstname: string;
     lastname: string;
@@ -22,4 +22,4 @@ class UserEntity implements UserInterface {
     }
 }
 
-export default UserEntity
+export default UserModel

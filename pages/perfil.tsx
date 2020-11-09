@@ -1,16 +1,16 @@
 import { FC } from 'react'
 import MyHead from '../components/myHeadComponent'
-import Style from '../styles/pages/homePageStyle'
+import Style from '../styles/pages/perfilPageStyle'
 import SideBar from '../components/sideBarComponent'
 
 const Home: FC = () => {
   return (
     <>
-      <MyHead title="Home" />
+      <MyHead title="Perfil" />
       <Style>
-          <SideBar activePath='/home' />
+          <SideBar activePath='/perfil' />
           <main>
-              Home
+              Perfil
           </main>
       </Style>
     </>

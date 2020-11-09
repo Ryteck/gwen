@@ -1,7 +1,7 @@
-import UserEntity from '../entities/userEntity'
+import UserModel from '../models/userModel'
 
 const userView = {
-  render (user: UserEntity) {
+  render (user: UserModel) {
     const { username, firstname, lastname, avatar } = user
     return {
       username,
@@ -10,7 +10,7 @@ const userView = {
       avatar
     }
   },
-  renderMany (users: Array<UserEntity>) {
+  renderMany (users: Array<UserModel>) {
     return users.map(user => this.render(user))
   }
 }

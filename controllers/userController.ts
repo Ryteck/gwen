@@ -2,7 +2,7 @@ import { NextApiHandler } from 'next'
 import redis from '../libs/redisLib'
 import * as Yup from 'yup'
 import crypto from '../libs/crypto'
-import UserEntity from '../entities/userEntity'
+import UserModel from '../models/userModel'
 import userView from '../views/userView'
 
 const listUsers = 'set-users'
@@ -14,7 +14,7 @@ const index: NextApiHandler = async (req, res) => {
     const users = Object(await Promise
       .all(usersIds
         .map(async id => await redis
-          .hgetall(id)))) as Array<UserEntity>
+          .hgetall(id)))) as Array<UserModel>
     res.status(200).json(userView.renderMany(users))
   } catch (error) {
     res.status(500).json({ error: String(error) })
@@ -33,7 +33,7 @@ const show: NextApiHandler = async (req, res) => {
       throw 'username não encontrado'
     }
 
-    const user = Object(await redis.hgetall(username)) as UserEntity
+    const user = Object(await redis.hgetall(username)) as UserModel
 
     res.status(200).json(userView.render(user))
   } catch (error) {
