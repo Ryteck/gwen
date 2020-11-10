@@ -10,15 +10,15 @@ interface PageFormat {
 
 const defaultPages: Array<PageFormat> = [
   { title: 'Home', path: '/home' },
+  { title: 'Disconnect', path: '/disconnect' }
+]
+
+const lowPages: Array<PageFormat> = [
   { title: 'Perfil', path: '/perfil' }
 ]
 
 const highPages: Array<PageFormat> = [
-
-]
-
-const lowPages: Array<PageFormat> = [
-
+  { title: 'User Controll', path: '/userc' }
 ]
 
 interface SideBarProps {
@@ -31,8 +31,8 @@ const SideBar: FC<SideBarProps> = props => {
   function getPageBlocksMenu (): Array<PageFormat> {
     let pages = []
     pages = pages.concat(defaultPages)
-    pages = pages.concat(highPages)
     pages = pages.concat(lowPages)
+    pages = pages.concat(highPages)
     return pages
   }
 
