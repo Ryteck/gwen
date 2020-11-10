@@ -17,19 +17,22 @@ const UserBlock: FC<UserBlockInterface> = props => {
   const [getLastname, setLastname] = useState(lastname)
   const [getAdministrador, setAdministrador] = useState(administrador)
 
+  function swirchUserAdm () {
+    setAdministrador(!getAdministrador)
+  }
+
   return (
       <Style>
           <div className='block-container'>
             <input placeholder='username' value={getUsername} onChange={e => setUsername(e.target.value)}/>
             <input placeholder='firstname' value={getFirstname} onChange={e => setFirstname(e.target.value)}/>
             <input placeholder='lastname' value={getLastname} onChange={e => setLastname(e.target.value)}/>
-            <div className='admSwitch'>
+            <div className='admSwitch' onClick={swirchUserAdm}>
                 {
                     getAdministrador
                       ? <FaCrown color="#F2EEDC" size="22" className='iconSelect'/>
                       : <FaUser color="#F2EEDC" size="22" className='iconSelect' />
                 }
-
             </div>
             <div className='block-controlls'>
                 <FaRegSave color="#F2EEDC" size="22" className='iconSelect'/>

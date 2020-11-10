@@ -48,16 +48,6 @@ main {
         }
       }
       
-      input.password-confirm {
-        border-color: var(--color-contrast-pure);
-        box-shadow: 0 0 2px var(--color-contrast-pure);
-    
-        :focus {
-            border-color: var(--color-contrast-light);
-            box-shadow: 0 0 100px var(--color-contrast-light);
-        }
-      }
-      
       input[type=submit] {
         border-color: var(--color-secondary-dark);
         box-shadow: 0 0 2px var(--color-secondary-dark);
