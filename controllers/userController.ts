@@ -16,7 +16,7 @@ const index = async (): Promise<Array<UserModel>> =>
         .hgetall(formatHashId(username))))) as Array<UserModel>
 
 const show = async (username: string): Promise<UserModel> => {
-  if (await isMember(username)) {
+  if (!await isMember(username)) {
     throw 'username não encontrado'
   }
   return Object(await redis.hgetall(formatHashId(username))) as UserModel
@@ -50,7 +50,7 @@ const update = async (
   avatar: string,
   administrador: 'true' | 'false'
 ): Promise<void> => {
-  if (await isMember(original)) {
+  if (!await isMember(original)) {
     throw 'username não encontrado'
   }
 
@@ -71,13 +71,13 @@ const update = async (
     .hset(id, 'password', crypto.generateHash(password))
     .hset(id, 'avatar', avatar)
     .hset(id, 'administrador', administrador)
-    .srem(listUsers, id)
+    .srem(listUsers, original)
     .del(formatHashId(original))
     .exec()
 }
 
 const destroy = async (username: string): Promise<void> => {
-  if (await isMember(username)) {
+  if (!await isMember(username)) {
     throw 'username não encontrado'
   }
 
