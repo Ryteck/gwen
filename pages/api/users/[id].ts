@@ -1,6 +1,6 @@
 import { NextApiHandler } from 'next'
-import userController from '../../../controllers/userController'
 import methodNotFoundError from '../../../errors/methodNotFoundError'
+import userController from '../../../controllers/userController'
 
 const { show, update, destroy } = userController
 

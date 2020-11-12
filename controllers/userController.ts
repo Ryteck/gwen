@@ -14,7 +14,7 @@ const index: NextApiHandler = async (req, res) => {
     const users = Object(await Promise
       .all(usersIds
         .map(async id => await redis
-          .hgetall(id)))) as Array<UserModel>
+          .hgetall(`user:${id}`)))) as Array<UserModel>
     res.status(200).json(userView.renderMany(users))
   } catch (error) {
     res.status(500).json({ error: String(error) })
@@ -33,7 +33,7 @@ const show: NextApiHandler = async (req, res) => {
       throw 'username não encontrado'
     }
 
-    const user = Object(await redis.hgetall(username)) as UserModel
+    const user = Object(await redis.hgetall(`user:${username}`)) as UserModel
 
     res.status(200).json(userView.render(user))
   } catch (error) {
@@ -58,15 +58,17 @@ const store: NextApiHandler = async (req, res) => {
       throw 'username já existe'
     }
 
+    const hsetUsername = `user:${username}`
+
     await redis
       .multi()
       .sadd(listUsers, username)
-      .hset(username, 'username', username)
-      .hset(username, 'firstname', firstname)
-      .hset(username, 'lastname', lastname)
-      .hset(username, 'password', crypto.generateDefaultPassword())
-      .hset(username, 'avatar', 'default_avatar.jpg')
-      .hset(username, 'administrador', 'false')
+      .hset(hsetUsername, 'username', username)
+      .hset(hsetUsername, 'firstname', firstname)
+      .hset(hsetUsername, 'lastname', lastname)
+      .hset(hsetUsername, 'password', crypto.generateDefaultPassword())
+      .hset(hsetUsername, 'avatar', 'default_avatar.jpg')
+      .hset(hsetUsername, 'administrador', 'false')
       .exec()
     res.status(201).json(data)
   } catch (error) {
@@ -92,12 +94,14 @@ const update: NextApiHandler = async (req, res) => {
       throw 'username não existe'
     }
 
+    const hsetUsername = `user:${username}`
+
     if (id === username) {
       await redis
         .multi()
-        .hset(username, 'username', username)
-        .hset(username, 'firstname', firstname)
-        .hset(username, 'lastname', lastname)
+        .hset(hsetUsername, 'username', username)
+        .hset(hsetUsername, 'firstname', firstname)
+        .hset(hsetUsername, 'lastname', lastname)
         .exec()
       res.status(201).json(data)
     } else {
@@ -107,16 +111,19 @@ const update: NextApiHandler = async (req, res) => {
         throw 'username já existe'
       }
 
+      const hgetId = `user:${id}`
+
       await redis
         .multi()
         .sadd(listUsers, username)
-        .hset(username, 'username', username)
-        .hset(username, 'firstname', firstname)
-        .hset(username, 'lastname', lastname)
-        .hset(username, 'password', (await redis.hget(id as string, 'password')))
-        .hset(username, 'avatar', (await redis.hget(id as string, 'avatar')))
+        .hset(hsetUsername, 'username', username)
+        .hset(hsetUsername, 'firstname', firstname)
+        .hset(hsetUsername, 'lastname', lastname)
+        .hset(hsetUsername, 'password', (await redis.hget(hgetId, 'password')))
+        .hset(hsetUsername, 'avatar', (await redis.hget(hgetId, 'avatar')))
+        .hset(hsetUsername, 'administrador', (await redis.hget(hgetId, 'administrador')))
         .srem(listUsers, id)
-        .hdel(id as string, 'username', 'firstname', 'lastname', 'password', 'avatar')
+        .del(hgetId)
         .exec()
 
       res.status(201).json(data)
@@ -141,7 +148,7 @@ const destroy: NextApiHandler = async (req, res) => {
     await redis
       .multi()
       .srem(listUsers, id)
-      .hdel(id as string, 'username', 'firstname', 'lastname', 'password', 'avatar')
+      .del(`user:${id}`)
       .exec()
 
     res.status(200).json({ message: 'ok' })
