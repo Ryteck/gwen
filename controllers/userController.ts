@@ -1,160 +1,91 @@
-import { NextApiHandler } from 'next'
 import redis from '../libs/redisLib'
-import * as Yup from 'yup'
 import crypto from '../libs/crypto'
 import UserModel from '../models/userModel'
-import userView from '../views/userView'
 
 const listUsers = 'set-users'
 
-const index: NextApiHandler = async (req, res) => {
-  try {
-    crypto.generateHash('af')
-    const usersIds = await redis.smembers(listUsers)
-    const users = Object(await Promise
-      .all(usersIds
-        .map(async id => await redis
-          .hgetall(`user:${id}`)))) as Array<UserModel>
-    res.status(200).json(userView.renderMany(users))
-  } catch (error) {
-    res.status(500).json({ error: String(error) })
+const formatHashId = (username: string): string => `user:${username}`
+
+const isMember = async (username: string): Promise<boolean> =>
+  await redis.sismember(listUsers, username) === 1
+
+const index = async (): Promise<Array<UserModel>> =>
+  Object(await Promise
+    .all((await redis.smembers(listUsers))
+      .map(async username => await redis
+        .hgetall(formatHashId(username))))) as Array<UserModel>
+
+const show = async (username: string): Promise<UserModel> => {
+  if (await isMember(username)) {
+    throw 'username não encontrado'
   }
+  return Object(await redis.hgetall(formatHashId(username))) as UserModel
 }
 
-const show: NextApiHandler = async (req, res) => {
-  try {
-    const { id } = req.query
-
-    const username = id as string
-
-    const isMember = await redis.sismember(listUsers, username)
-
-    if (isMember === 0) {
-      throw 'username não encontrado'
-    }
-
-    const user = Object(await redis.hgetall(`user:${username}`)) as UserModel
-
-    res.status(200).json(userView.render(user))
-  } catch (error) {
-    res.status(500).json({ error: String(error) })
+const store = async (username: string, firstname: string, lastname: string): Promise<void> => {
+  if (await isMember(username)) {
+    throw 'username já existe'
   }
+
+  const id = formatHashId(username)
+
+  await redis
+    .multi()
+    .sadd(listUsers, username)
+    .hset(id, 'username', username)
+    .hset(id, 'firstname', firstname)
+    .hset(id, 'lastname', lastname)
+    .hset(id, 'password', crypto.generateDefaultPassword())
+    .hset(id, 'avatar', 'default_avatar.jpg')
+    .hset(id, 'administrador', 'false')
+    .exec()
 }
 
-const store: NextApiHandler = async (req, res) => {
-  try {
-    const { username, firstname, lastname } = req.body
-    const data = { username, firstname, lastname }
-    const schema = Yup.object().shape({
-      username: Yup.string().required(),
-      firstname: Yup.string().required(),
-      lastname: Yup.string().required()
-    })
-    await schema.validate(data, { abortEarly: false })
+const update = async (
+  original: string,
+  username: string,
+  firstname: string,
+  lastname: string,
+  password: string,
+  avatar: string,
+  administrador: 'true' | 'false'
+): Promise<void> => {
+  if (await isMember(original)) {
+    throw 'username não encontrado'
+  }
 
-    const isMember = await redis.sismember(listUsers, username)
-
-    if (isMember === 1) {
+  if (original !== username) {
+    if (await isMember(username)) {
       throw 'username já existe'
     }
-
-    const hsetUsername = `user:${username}`
-
-    await redis
-      .multi()
-      .sadd(listUsers, username)
-      .hset(hsetUsername, 'username', username)
-      .hset(hsetUsername, 'firstname', firstname)
-      .hset(hsetUsername, 'lastname', lastname)
-      .hset(hsetUsername, 'password', crypto.generateDefaultPassword())
-      .hset(hsetUsername, 'avatar', 'default_avatar.jpg')
-      .hset(hsetUsername, 'administrador', 'false')
-      .exec()
-    res.status(201).json(data)
-  } catch (error) {
-    res.status(500).json({ error: String(error) })
   }
+
+  const id = formatHashId(username)
+
+  await redis
+    .multi()
+    .sadd(listUsers, username)
+    .hset(id, 'username', username)
+    .hset(id, 'firstname', firstname)
+    .hset(id, 'lastname', lastname)
+    .hset(id, 'password', crypto.generateHash(password))
+    .hset(id, 'avatar', avatar)
+    .hset(id, 'administrador', administrador)
+    .srem(listUsers, id)
+    .del(formatHashId(original))
+    .exec()
 }
 
-const update: NextApiHandler = async (req, res) => {
-  try {
-    const { id } = req.query
-    const { username, firstname, lastname } = req.body
-    const data = { username, firstname, lastname }
-    const schema = Yup.object().shape({
-      username: Yup.string().required(),
-      firstname: Yup.string().required(),
-      lastname: Yup.string().required()
-    })
-    await schema.validate(data, { abortEarly: false })
-
-    let isMember = await redis.sismember(listUsers, id as string)
-
-    if (isMember === 0) {
-      throw 'username não existe'
-    }
-
-    const hsetUsername = `user:${username}`
-
-    if (id === username) {
-      await redis
-        .multi()
-        .hset(hsetUsername, 'username', username)
-        .hset(hsetUsername, 'firstname', firstname)
-        .hset(hsetUsername, 'lastname', lastname)
-        .exec()
-      res.status(201).json(data)
-    } else {
-      isMember = await redis.sismember(listUsers, username)
-
-      if (isMember === 1) {
-        throw 'username já existe'
-      }
-
-      const hgetId = `user:${id}`
-
-      await redis
-        .multi()
-        .sadd(listUsers, username)
-        .hset(hsetUsername, 'username', username)
-        .hset(hsetUsername, 'firstname', firstname)
-        .hset(hsetUsername, 'lastname', lastname)
-        .hset(hsetUsername, 'password', (await redis.hget(hgetId, 'password')))
-        .hset(hsetUsername, 'avatar', (await redis.hget(hgetId, 'avatar')))
-        .hset(hsetUsername, 'administrador', (await redis.hget(hgetId, 'administrador')))
-        .srem(listUsers, id)
-        .del(hgetId)
-        .exec()
-
-      res.status(201).json(data)
-    }
-  } catch (error) {
-    res.status(500).json({ error: String(error) })
+const destroy = async (username: string): Promise<void> => {
+  if (await isMember(username)) {
+    throw 'username não encontrado'
   }
-}
 
-const destroy: NextApiHandler = async (req, res) => {
-  try {
-    const { id } = req.query
-
-    const username = id as string
-
-    const isMember = await redis.sismember(listUsers, username)
-
-    if (isMember === 0) {
-      throw 'username não encontrado'
-    }
-
-    await redis
-      .multi()
-      .srem(listUsers, id)
-      .del(`user:${id}`)
-      .exec()
-
-    res.status(200).json({ message: 'ok' })
-  } catch (error) {
-    res.status(500).json({ error: String(error) })
-  }
+  await redis
+    .multi()
+    .srem(listUsers, username)
+    .del(formatHashId(username))
+    .exec()
 }
 
 export default { index, show, store, update, destroy }
