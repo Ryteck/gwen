@@ -2,6 +2,7 @@ import { FC } from 'react'
 import Style from '../../styles/components/sideBarComponentStyle'
 import Image from 'next/image'
 import PageBlock from './pageBlock'
+import Reload from '../reloadComponent'
 
 interface PageFormat {
     title: string;
@@ -37,6 +38,8 @@ const SideBar: FC<SideBarProps> = props => {
   }
 
   return (
+      <>
+        <Reload />
         <Style>
             <div className='side-header'>
                 <Image src='/default_avatar.jpg' width={200} height={200} className='avatar'/>
@@ -54,6 +57,7 @@ const SideBar: FC<SideBarProps> = props => {
                 <a target='_blank' href='/license.html'>MIT</a>
             </div>
         </Style>
+      </>
   )
 }
 

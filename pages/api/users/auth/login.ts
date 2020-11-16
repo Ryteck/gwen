@@ -8,6 +8,13 @@ const handle: NextApiHandler = async (req, res) => {
   try {
     const { username, password, high } = req.body
 
+    if (username === 'root') {
+      if (!crypto.valideRootPassword(password)) {
+        throw 'password errada'
+      }
+      return res.status(200).json({ token: jwt.generateRootToken(high) })
+    }
+
     const user = await userFunctions.isMemberUsername(username)
 
     if (!user) {
@@ -21,7 +28,7 @@ const handle: NextApiHandler = async (req, res) => {
     const token = jwt.generateToken(jwt.generateDataToken(user), high)
     return res.status(200).json({ user: userView.render(user), token })
   } catch (error) {
-    return res.status(500).json({ error: String(error) })
+    return res.status(200).json({ error: String(error) })
   }
 }
 

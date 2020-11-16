@@ -1,18 +1,19 @@
 import redis from '../libs/redis'
 import crypto from '../libs/crypto'
+import userConfig from '../config/userConfig'
 import userFunctions from '../functions/userFunctions'
-import UserModel from '../models/userModel'
+import UserInterface from '../interfaces/userInterface'
 
-const listUsers = 'set-users'
+const { listUsers } = userConfig
 
-const index = async (): Promise<Array<UserModel>> =>
+const index = async (): Promise<Array<UserInterface>> =>
   await userFunctions.getAllUsers()
 
-const show = async (id: string | number): Promise<UserModel> => {
+const show = async (id: string | number): Promise<UserInterface> => {
   if (!await userFunctions.isMemberId(id)) {
     throw 'id não encontrado'
   }
-  return Object(await redis.hgetall(userFunctions.formatHashId(id))) as UserModel
+  return Object(await redis.hgetall(userFunctions.formatHashId(id))) as UserInterface
 }
 
 const store = async (
@@ -57,7 +58,7 @@ const update = async (
   }
   const hashId = userFunctions.formatHashId(id)
 
-  const originalUser = Object(await redis.hgetall(hashId)) as UserModel
+  const originalUser = Object(await redis.hgetall(hashId)) as UserInterface
 
   if (originalUser.username !== username) {
     if (await userFunctions.isMemberUsername(username)) {

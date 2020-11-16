@@ -1,8 +1,18 @@
-import { FC, FormEvent, useState } from 'react'
+import { FC, FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import CheckBox from '../components/checkBoxComponent'
 import MyHead from '../components/myHeadComponent'
 import Style from '../styles/pages/indexPageStyle'
+import axios from '../libs/axios'
+import { toast } from 'react-toastify'
+import UserInterface from '../interfaces/userInterface'
+import authHelper from '../helpers/authHelper'
+
+interface AxiosLoginResponse {
+  token: string;
+  user: UserInterface;
+  error?: any;
+}
 
 const Index: FC = () => {
   const [getUsername, setUsername] = useState('')
@@ -11,10 +21,44 @@ const Index: FC = () => {
 
   const router = useRouter()
 
-  function goToHome (e: FormEvent) {
+  async function goToHome (e: FormEvent) {
     e.preventDefault()
-    router.push('/home')
+    try {
+      const data = {
+        username: getUsername,
+        password: getPassword,
+        high: getLongTime
+      }
+      const { token, user } =
+          await axios
+            .post<AxiosLoginResponse>('users/auth/login', data)
+            .then(({ data }) => {
+              const { error } = data
+              if (error) throw error
+              return data
+            })
+            .catch(error => { throw error })
+
+      if (getUsername === 'root') {
+        getLongTime ? authHelper.saveRootAll(token) : authHelper.saveRootSession(token)
+      } else {
+        getLongTime ? authHelper.saveAll(user, token) : authHelper.saveSession(user, token)
+      }
+
+      router.push('/home')
+    } catch (error) {
+      toast.error(String(error))
+    }
   }
+
+  useEffect(() => {
+    if (!sessionStorage.getItem('type')) {
+      if (!localStorage.getItem('type')) {
+        return
+      }
+    }
+    router.push('/home')
+  }, [])
 
   return (
     <>

@@ -20,7 +20,13 @@ const validate = async (username: string, firstname: string, lastname: string): 
 const handle: NextApiHandler = async (req, res) => {
   try {
     const { username, firstname, lastname } = req.body
+
+    if (username === 'root') {
+      throw 'o usuário com username root não pode ser criado'
+    }
+
     await validate(username, firstname, lastname)
+
     const id = await idHelper.generateNewId()
     await userController.store(
       id,
@@ -34,7 +40,7 @@ const handle: NextApiHandler = async (req, res) => {
     const user = await userController.show(id)
     res.status(200).json(userView.render(user))
   } catch (error) {
-    res.status(500).json({ error: String(error) })
+    res.status(200).json({ error: String(error) })
   }
 }
 

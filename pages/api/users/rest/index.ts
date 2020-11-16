@@ -7,7 +7,7 @@ const handle: NextApiHandler = async (req, res) => {
     const users = await userController.index()
     res.status(200).json(userView.renderMany(users))
   } catch (error) {
-    res.status(500).json({ error: String(error) })
+    res.status(200).json({ error: String(error) })
   }
 }
 

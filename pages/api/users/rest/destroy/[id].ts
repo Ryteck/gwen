@@ -7,7 +7,7 @@ const handle: NextApiHandler = async (req, res) => {
     await userController.destroy(id)
     res.status(200).json({ message: 'ok' })
   } catch (error) {
-    res.status(500).json({ error: String(error) })
+    res.status(200).json({ error: String(error) })
   }
 }
 
