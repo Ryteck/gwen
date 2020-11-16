@@ -1,48 +1,22 @@
-import redis from '../libs/redisLib'
+import redis from '../libs/redis'
 import crypto from '../libs/crypto'
+import userFunctions from '../functions/userFunctions'
 import UserModel from '../models/userModel'
 
 const listUsers = 'set-users'
 
-const formatHashId = (username: string): string => `user:${username}`
-
-const isMember = async (username: string): Promise<boolean> =>
-  await redis.sismember(listUsers, username) === 1
-
 const index = async (): Promise<Array<UserModel>> =>
-  Object(await Promise
-    .all((await redis.smembers(listUsers))
-      .map(async username => await redis
-        .hgetall(formatHashId(username))))) as Array<UserModel>
+  await userFunctions.getAllUsers()
 
-const show = async (username: string): Promise<UserModel> => {
-  if (!await isMember(username)) {
-    throw 'username não encontrado'
+const show = async (id: string | number): Promise<UserModel> => {
+  if (!await userFunctions.isMemberId(id)) {
+    throw 'id não encontrado'
   }
-  return Object(await redis.hgetall(formatHashId(username))) as UserModel
+  return Object(await redis.hgetall(userFunctions.formatHashId(id))) as UserModel
 }
 
-const store = async (username: string, firstname: string, lastname: string): Promise<void> => {
-  if (await isMember(username)) {
-    throw 'username já existe'
-  }
-
-  const id = formatHashId(username)
-
-  await redis
-    .multi()
-    .sadd(listUsers, username)
-    .hset(id, 'username', username)
-    .hset(id, 'firstname', firstname)
-    .hset(id, 'lastname', lastname)
-    .hset(id, 'password', crypto.generateDefaultPassword())
-    .hset(id, 'avatar', 'default_avatar.jpg')
-    .hset(id, 'administrador', 'false')
-    .exec()
-}
-
-const update = async (
-  original: string,
+const store = async (
+  id: string | number,
   username: string,
   firstname: string,
   lastname: string,
@@ -50,41 +24,67 @@ const update = async (
   avatar: string,
   administrador: 'true' | 'false'
 ): Promise<void> => {
-  if (!await isMember(original)) {
-    throw 'username não encontrado'
+  if (await userFunctions.isMemberUsername(username)) {
+    throw 'username já existe'
   }
 
-  if (original !== username) {
-    if (await isMember(username)) {
+  const hashId = userFunctions.formatHashId(id)
+
+  await redis
+    .multi()
+    .sadd(listUsers, id)
+    .hset(hashId, 'id', id)
+    .hset(hashId, 'username', username)
+    .hset(hashId, 'firstname', firstname)
+    .hset(hashId, 'lastname', lastname)
+    .hset(hashId, 'password', password)
+    .hset(hashId, 'avatar', avatar)
+    .hset(hashId, 'administrador', administrador)
+    .exec()
+}
+
+const update = async (
+  id: string | number,
+  username: string,
+  firstname: string,
+  lastname: string,
+  password: string,
+  avatar: string,
+  administrador: 'true' | 'false'
+): Promise<void> => {
+  if (!await userFunctions.isMemberId(id)) {
+    throw 'id não encontrado'
+  }
+  const hashId = userFunctions.formatHashId(id)
+
+  const originalUser = Object(await redis.hgetall(hashId)) as UserModel
+
+  if (originalUser.username !== username) {
+    if (await userFunctions.isMemberUsername(username)) {
       throw 'username já existe'
     }
   }
 
-  const id = formatHashId(username)
-
   await redis
     .multi()
-    .sadd(listUsers, username)
-    .hset(id, 'username', username)
-    .hset(id, 'firstname', firstname)
-    .hset(id, 'lastname', lastname)
-    .hset(id, 'password', crypto.generateHash(password))
-    .hset(id, 'avatar', avatar)
-    .hset(id, 'administrador', administrador)
-    .srem(listUsers, original)
-    .del(formatHashId(original))
+    .hset(hashId, 'username', username)
+    .hset(hashId, 'firstname', firstname)
+    .hset(hashId, 'lastname', lastname)
+    .hset(hashId, 'password', crypto.generateHash(password))
+    .hset(hashId, 'avatar', avatar)
+    .hset(hashId, 'administrador', administrador)
     .exec()
 }
 
-const destroy = async (username: string): Promise<void> => {
-  if (!await isMember(username)) {
-    throw 'username não encontrado'
+const destroy = async (id: string | number): Promise<void> => {
+  if (!await userFunctions.isMemberId(id)) {
+    throw 'id não encontrado'
   }
 
   await redis
     .multi()
-    .srem(listUsers, username)
-    .del(formatHashId(username))
+    .srem(listUsers, id)
+    .del(userFunctions.formatHashId(id))
     .exec()
 }
 

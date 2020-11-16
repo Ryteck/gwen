@@ -1,9 +1,7 @@
 import { NextApiHandler } from 'next'
-import userController from '../../../../controllers/userController'
+import userController from '../../../../../controllers/userController'
 import * as Yup from 'yup'
-import userView from '../../../../views/userView'
-import crypto from '../../../../libs/crypto'
-import idHelper from '../../../../helpers/idHelper'
+import userView from '../../../../../views/userView'
 
 const validate = async (username: string, firstname: string, lastname: string): Promise<void> => {
   const data = { username, firstname, lastname }
@@ -19,20 +17,22 @@ const validate = async (username: string, firstname: string, lastname: string): 
 
 const handle: NextApiHandler = async (req, res) => {
   try {
+    const id = String(req.query.id)
     const { username, firstname, lastname } = req.body
     await validate(username, firstname, lastname)
-    const id = await idHelper.generateNewId()
-    await userController.store(
+    const originalUser = await userController.show(id)
+    const tempNewUser = { ...originalUser, username: username, firstname: firstname, lastname: lastname }
+    await userController.update(
       id,
-      username,
-      firstname,
-      lastname,
-      crypto.generateDefaultPassword(),
-      'default_avatar.jpg',
-      'false'
+      tempNewUser.username,
+      tempNewUser.firstname,
+      tempNewUser.lastname,
+      tempNewUser.password,
+      tempNewUser.avatar,
+      tempNewUser.administrador
     )
-    const user = await userController.show(id)
-    res.status(200).json(userView.render(user))
+    const newUser = await userController.show(id)
+    res.status(200).json(userView.render(newUser))
   } catch (error) {
     res.status(500).json({ error: String(error) })
   }

@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next'
-import userController from '../../../../controllers/userController'
+import userFunctions from '../../../../functions/userFunctions'
 import crypto from '../../../../libs/crypto'
 import jwt from '../../../../libs/jwt'
 import userView from '../../../../views/userView'
@@ -8,10 +8,14 @@ const handle: NextApiHandler = async (req, res) => {
   try {
     const { username, password, high } = req.body
 
-    const user = await userController.show(username)
+    const user = await userFunctions.isMemberUsername(username)
+
+    if (!user) {
+      throw 'username não encontrado'
+    }
 
     if (!crypto.valideHash(password, user.password)) {
-      throw 'wrong password'
+      throw 'password errada'
     }
 
     const token = jwt.generateToken(jwt.generateDataToken(user), high)

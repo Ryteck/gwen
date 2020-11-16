@@ -1,14 +1,16 @@
 import UserInterface from '../interfaces/userInterface'
 
 class UserModel implements UserInterface {
-    username: string;
-    firstname: string;
-    lastname: string;
-    password: string;
-    avatar: string;
-    administrador: 'true' | 'false';
+    id: string | number
+    username: string
+    firstname: string
+    lastname: string
+    password: string
+    avatar: string
+    administrador: 'true' | 'false'
 
     constructor (
+      id: string | number,
       username: string,
       firstname: string,
       lastname: string,
@@ -16,6 +18,7 @@ class UserModel implements UserInterface {
       avatar: string,
       administrador: 'true' | 'false'
     ) {
+      this.id = id
       this.username = username
       this.firstname = firstname
       this.lastname = lastname

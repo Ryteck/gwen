@@ -7,7 +7,7 @@ const SECRET = process.env.MOD_TOKEN
 const ONEHOUR = 60 * 60
 
 const generateDataToken = (user: UserInterface): TokenDataInterface =>
-  ({ id: user.username, userType: user.administrador ? 'high' : 'low' })
+  ({ id: user.id, userType: (user.administrador === 'true') ? 'high' : 'low' })
 
 const generateToken = (data: TokenDataInterface, high: boolean): string =>
   Jwt.sign(data, SECRET, { expiresIn: (high ? (ONEHOUR * 24) : ONEHOUR) })

@@ -1,4 +1,5 @@
 interface UserInterface {
+    id: string | number;
     username: string;
     firstname: string;
     lastname: string;

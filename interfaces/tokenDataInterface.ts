@@ -1,5 +1,5 @@
 interface TokenDataInterface {
-    id?: string;
+    id?: string | number;
     userType: 'root' | 'low' | 'high';
 }
 

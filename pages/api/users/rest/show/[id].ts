@@ -4,8 +4,8 @@ import userView from '../../../../../views/userView'
 
 const handle: NextApiHandler = async (req, res) => {
   try {
-    const { username } = req.query
-    const user = await userController.show(username as string)
+    const id = String(req.query.id)
+    const user = await userController.show(id)
     res.status(200).json(userView.render(user))
   } catch (error) {
     res.status(500).json({ error: String(error) })

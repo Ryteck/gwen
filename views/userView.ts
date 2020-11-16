@@ -2,8 +2,9 @@ import UserModel from '../models/userModel'
 
 const userView = {
   render (user: UserModel) {
-    const { username, firstname, lastname, avatar, administrador } = user
+    const { id, username, firstname, lastname, avatar, administrador } = user
     return {
+      id,
       username,
       firstname,
       lastname,
