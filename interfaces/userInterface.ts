@@ -5,7 +5,7 @@ interface UserInterface {
     lastname: string;
     password: string;
     avatar: string;
-    administrador: 'true' | 'false';
+    administrador: boolean | 'true' | 'false';
 }
 
 export default UserInterface

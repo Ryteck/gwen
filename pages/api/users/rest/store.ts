@@ -38,7 +38,7 @@ const handle: NextApiHandler = async (req, res) => {
       'false'
     )
     const user = await userController.show(id)
-    res.status(200).json(userView.render(user))
+    res.status(200).json({ user: userView.render(user) })
   } catch (error) {
     res.status(200).json({ error: String(error) })
   }

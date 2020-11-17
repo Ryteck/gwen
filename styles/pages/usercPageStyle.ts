@@ -64,6 +64,7 @@ main {
       margin-top: 100px;
       display: grid;
       grid-gap: 50px;
+      overflow: auto;
       grid-template-columns: 1fr;
       scrollbar-width: none;
       -ms-overflow-style: none;

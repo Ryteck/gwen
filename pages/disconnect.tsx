@@ -5,7 +5,7 @@ import SideBar from '../components/sideBarComponent'
 import { useRouter } from 'next/router'
 import authHelper from '../helpers/authHelper'
 
-const Home: FC = () => {
+const Disconnect: FC = () => {
   const router = useRouter()
 
   function handleExit () {
@@ -26,4 +26,4 @@ const Home: FC = () => {
   )
 }
 
-export default Home
+export default Disconnect

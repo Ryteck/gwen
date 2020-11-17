@@ -6,7 +6,7 @@ import Image from 'next/image'
 import alertUtil from '../utils/alertUtil'
 import { toast } from 'react-toastify'
 
-const Home: FC = () => {
+const Perfil: FC = () => {
   async function confirmPassword (): Promise<boolean> {
     return await alertUtil
       .generateConfirmAlert()
@@ -74,4 +74,4 @@ const Home: FC = () => {
   )
 }
 
-export default Home
+export default Perfil

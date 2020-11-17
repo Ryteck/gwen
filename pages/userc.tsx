@@ -1,10 +1,21 @@
-import { FC, FormEvent, KeyboardEvent } from 'react'
+import { FC, FormEvent, KeyboardEvent, useEffect, useState } from 'react'
 import MyHead from '../components/myHeadComponent'
 import Style from '../styles/pages/usercPageStyle'
 import SideBar from '../components/sideBarComponent'
 import UserBlock from '../components/userBlockComponent'
+import { toast } from 'react-toastify'
+import axios from '../libs/axios'
+import UserInterface from '../interfaces/userInterface'
+import { use } from 'ast-types'
 
-const Home: FC = () => {
+interface AxiosUsersIndexResponse {
+    users: Array<UserInterface>;
+    error?: any;
+}
+
+const UserControll: FC = () => {
+  const [getUsers, setUsers] = useState<Array<UserInterface>>([])
+
   function add (e: FormEvent) {
     e.preventDefault()
   }
@@ -15,6 +26,28 @@ const Home: FC = () => {
       return false
     }
   }
+
+  async function loadUsers () {
+    try {
+      const { users } =
+            await axios
+              .post<AxiosUsersIndexResponse>('users/rest/')
+              .then(({ data }) => {
+                const { error } = data
+                if (error) throw error
+                return data
+              })
+              .catch(error => { throw error })
+
+      setUsers(users)
+    } catch (error) {
+      toast.error(String(error))
+    }
+  }
+
+  useEffect(() => {
+    loadUsers()
+  }, [])
 
   return (
     <>
@@ -29,8 +62,17 @@ const Home: FC = () => {
                   <input type='submit' value='adcionar'/>
               </form>
               <div className='content'>
-                <UserBlock username='ryteck' firstname='Ryan' lastname='Martins' administrador={true} />
-                <UserBlock username='ryteck' firstname='Ryan' lastname='Martins' administrador={false} />
+                  {
+                      getUsers.map(user => (
+                          <UserBlock
+                              key={user.id}
+                              id={user.id}
+                              username={user.username}
+                              firstname={user.firstname}
+                              lastname={user.lastname}
+                              administrador={Boolean(user.administrador)} />
+                      ))
+                  }
               </div>
           </main>
       </Style>
@@ -38,4 +80,4 @@ const Home: FC = () => {
   )
 }
 
-export default Home
+export default UserControll

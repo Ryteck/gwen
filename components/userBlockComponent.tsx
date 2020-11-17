@@ -3,6 +3,7 @@ import Style from '../styles/components/userBlockComponentStyle'
 import { FaCrown, FaRegSave, FaSyncAlt, FaTrash, FaUser } from 'react-icons/fa'
 
 interface UserBlockInterface {
+    id: string | number;
     username: string;
     firstname: string;
     lastname: string;
@@ -10,7 +11,7 @@ interface UserBlockInterface {
 }
 
 const UserBlock: FC<UserBlockInterface> = props => {
-  const { username, firstname, lastname, administrador } = props
+  const { id, username, firstname, lastname, administrador } = props
 
   const [getUsername, setUsername] = useState(username)
   const [getFirstname, setFirstname] = useState(firstname)

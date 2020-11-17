@@ -32,7 +32,7 @@ const handle: NextApiHandler = async (req, res) => {
       tempNewUser.administrador
     )
     const newUser = await userController.show(id)
-    res.status(200).json(userView.render(newUser))
+    res.status(200).json({ user: userView.render(newUser) })
   } catch (error) {
     res.status(200).json({ error: String(error) })
   }
