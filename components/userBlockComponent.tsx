@@ -1,6 +1,9 @@
 import { FC, useState } from 'react'
 import Style from '../styles/components/userBlockComponentStyle'
 import { FaCrown, FaRegSave, FaSyncAlt, FaTrash, FaUser } from 'react-icons/fa'
+import { toast } from 'react-toastify'
+import axios from '../libs/axios'
+import Router from 'next/router'
 
 interface UserBlockInterface {
     id: string | number;
@@ -22,6 +25,21 @@ const UserBlock: FC<UserBlockInterface> = props => {
     setAdministrador(!getAdministrador)
   }
 
+  async function destroyUser () {
+    try {
+      await axios
+        .post(`users/rest/destroy/${id}`)
+        .then(({ data }) => {
+          const { error } = data
+          if (error) throw error
+        })
+        .catch(error => { throw error })
+      Router.reload()
+    } catch (error) {
+      toast.error(String(error))
+    }
+  }
+
   return (
       <Style>
           <div className='block-container'>
@@ -38,7 +56,7 @@ const UserBlock: FC<UserBlockInterface> = props => {
             <div className='block-controlls'>
                 <FaRegSave color="#F2EEDC" size="22" className='iconSelect'/>
                 <FaSyncAlt color="#F2EEDC" size="22" className='iconSelect'/>
-                <FaTrash color="#F2EEDC" size="22" className='iconSelect'/>
+                <FaTrash color="#F2EEDC" size="22" className='iconSelect' onClick={destroyUser}/>
             </div>
           </div>
       </Style>

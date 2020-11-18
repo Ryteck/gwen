@@ -6,7 +6,7 @@ import UserBlock from '../components/userBlockComponent'
 import { toast } from 'react-toastify'
 import axios from '../libs/axios'
 import UserInterface from '../interfaces/userInterface'
-import { use } from 'ast-types'
+import Router from 'next/router'
 
 interface AxiosUsersIndexResponse {
     users: Array<UserInterface>;
@@ -15,9 +15,29 @@ interface AxiosUsersIndexResponse {
 
 const UserControll: FC = () => {
   const [getUsers, setUsers] = useState<Array<UserInterface>>([])
+  const [getUsername, setUsername] = useState('')
+  const [getFirstname, setFirstname] = useState('')
+  const [getLastname, setLastname] = useState('')
 
-  function add (e: FormEvent) {
+  async function add (e: FormEvent) {
     e.preventDefault()
+    try {
+      const data = {
+        username: getUsername,
+        firstname: getFirstname,
+        lastname: getLastname
+      }
+      await axios
+        .post('users/rest/store', data)
+        .then(({ data }) => {
+          const { error } = data
+          if (error) throw error
+        })
+        .catch(error => { throw error })
+      Router.reload()
+    } catch (error) {
+      toast.error(String(error))
+    }
   }
 
   function blockEnter (e: KeyboardEvent) {
@@ -53,25 +73,56 @@ const UserControll: FC = () => {
     <>
       <MyHead title="User Controller" />
       <Style>
-          <SideBar activePath='/userc' />
+          <SideBar
+              activePath='/home'
+              userType={sessionStorage.getItem('type')}
+              firstname={sessionStorage.getItem('firstname')}
+              lastname={sessionStorage.getItem('lastname')}
+              avatar={sessionStorage.getItem('avatar')}
+          />
           <main>
               <form onSubmit={add}>
-                  <input type='text' placeholder='username' onKeyDown={blockEnter}/>
-                  <input type='text' placeholder='username' onKeyDown={blockEnter}/>
-                  <input type='text' placeholder='username' onKeyDown={blockEnter}/>
+                  <input
+                      type='text'
+                      placeholder='username'
+                      onKeyDown={blockEnter}
+                      value={getUsername}
+                      onChange={e => setUsername(e.target.value)}
+                  />
+                  <input
+                      type='text'
+                      placeholder='firstname'
+                      onKeyDown={blockEnter}
+                      value={getFirstname}
+                      onChange={e => setFirstname(e.target.value)}
+                  />
+                  <input
+                      type='text'
+                      placeholder='lastname'
+                      onKeyDown={blockEnter}
+                      value={getLastname}
+                      onChange={e => setLastname(e.target.value)}
+                  />
                   <input type='submit' value='adcionar'/>
               </form>
               <div className='content'>
                   {
-                      getUsers.map(user => (
-                          <UserBlock
-                              key={user.id}
-                              id={user.id}
-                              username={user.username}
-                              firstname={user.firstname}
-                              lastname={user.lastname}
-                              administrador={Boolean(user.administrador)} />
-                      ))
+                      getUsers.map(user => {
+                        if (user.username !== sessionStorage.getItem('username')) {
+                          return (
+                                  <UserBlock
+                                      key={user.id}
+                                      id={user.id}
+                                      username={user.username}
+                                      firstname={user.firstname}
+                                      lastname={user.lastname}
+                                      administrador={Boolean(user.administrador)}
+                                  />
+                          )
+                        } else {
+                          return null
+                        }
+                      })
                   }
               </div>
           </main>

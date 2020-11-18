@@ -24,10 +24,14 @@ const highPages: Array<PageFormat> = [
 
 interface SideBarProps {
     activePath: string;
+    userType: string;
+    avatar?: string;
+    firstname?: string;
+    lastname?: string;
 }
 
 const SideBar: FC<SideBarProps> = props => {
-  const { activePath } = props
+  const { activePath, userType, avatar, firstname, lastname } = props
 
   function getPageBlocksMenu (): Array<PageFormat> {
     let pages = []
@@ -37,14 +41,34 @@ const SideBar: FC<SideBarProps> = props => {
     return pages
   }
 
+  function getAvatarUrl (): string {
+    return `/${avatar}`
+  }
+
+  function getFullName (): string {
+    return `${firstname} ${lastname}`
+  }
+
+  function getHeaderSideBar () {
+    return (
+          <div className='side-header'>
+              <Image src={getAvatarUrl()} width={200} height={200} className='avatar'/>
+              <span>
+                    {
+                        getFullName()
+                    }
+                </span>
+          </div>
+    )
+  }
+
   return (
       <>
         <Reload />
         <Style>
-            <div className='side-header'>
-                <Image src='/default_avatar.jpg' width={200} height={200} className='avatar'/>
-                <span>Ryan Martins</span>
-            </div>
+            {
+                userType !== 'root' ? getHeaderSideBar() : null
+            }
             <div className='side-blocks'>
                 {
                     getPageBlocksMenu().map(pageBlock => {

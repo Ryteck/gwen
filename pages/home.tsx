@@ -8,7 +8,13 @@ const Home: FC = () => {
     <>
       <MyHead title="Home" />
       <Style>
-          <SideBar activePath='/home' />
+          <SideBar
+              activePath='/home'
+              userType={sessionStorage.getItem('type')}
+              firstname={sessionStorage.getItem('firstname')}
+              lastname={sessionStorage.getItem('lastname')}
+              avatar={sessionStorage.getItem('avatar')}
+          />
           <main>
               Home
           </main>
