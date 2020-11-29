@@ -73,13 +73,7 @@ const UserControll: FC = () => {
     <>
       <MyHead title="User Controller" />
       <Style>
-          <SideBar
-              activePath='/home'
-              userType={sessionStorage.getItem('type')}
-              firstname={sessionStorage.getItem('firstname')}
-              lastname={sessionStorage.getItem('lastname')}
-              avatar={sessionStorage.getItem('avatar')}
-          />
+          <SideBar activePath='/userc'/>
           <main>
               <form onSubmit={add}>
                   <input

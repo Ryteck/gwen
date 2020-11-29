@@ -51,13 +51,7 @@ const Perfil: FC = () => {
     <>
       <MyHead title="Perfil" />
       <Style>
-          <SideBar
-              activePath='/home'
-              userType={sessionStorage.getItem('type')}
-              firstname={sessionStorage.getItem('firstname')}
-              lastname={sessionStorage.getItem('lastname')}
-              avatar={sessionStorage.getItem('avatar')}
-          />
+          <SideBar activePath='/perfil'/>
           <main>
               <form onSubmit={switchAvatar}>
                   <Image src='/default_avatar.jpg' width={100} height={100} className='avatar-prop'/>

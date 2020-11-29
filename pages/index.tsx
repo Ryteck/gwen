@@ -52,12 +52,14 @@ const Index: FC = () => {
   }
 
   useEffect(() => {
-    if (!sessionStorage.getItem('type')) {
-      if (!localStorage.getItem('type')) {
-        return
+    if (sessionStorage && localStorage) {
+      if (!sessionStorage.getItem('type')) {
+        if (!localStorage.getItem('type')) {
+          return
+        }
       }
+      router.push('/home')
     }
-    router.push('/home')
   }, [])
 
   return (

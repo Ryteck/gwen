@@ -1,8 +1,8 @@
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import Style from '../../styles/components/sideBarComponentStyle'
 import Image from 'next/image'
 import PageBlock from './pageBlock'
-import Reload from '../reloadComponent'
+import Reload from './reload'
 
 interface PageFormat {
     title: string;
@@ -24,14 +24,15 @@ const highPages: Array<PageFormat> = [
 
 interface SideBarProps {
     activePath: string;
-    userType: string;
-    avatar?: string;
-    firstname?: string;
-    lastname?: string;
 }
 
 const SideBar: FC<SideBarProps> = props => {
-  const { activePath, userType, avatar, firstname, lastname } = props
+  const { activePath } = props
+
+  const [getUserType, setUserType] = useState('')
+  const [getAvatar, setAvatar] = useState('')
+  const [getFirstname, setFirstname] = useState('')
+  const [getLastname, setLastname] = useState('')
 
   function getPageBlocksMenu (): Array<PageFormat> {
     let pages = []
@@ -42,11 +43,11 @@ const SideBar: FC<SideBarProps> = props => {
   }
 
   function getAvatarUrl (): string {
-    return `/${avatar}`
+    return `/${getAvatar}`
   }
 
   function getFullName (): string {
-    return `${firstname} ${lastname}`
+    return `${getFirstname} ${getLastname}`
   }
 
   function getHeaderSideBar () {
@@ -62,12 +63,21 @@ const SideBar: FC<SideBarProps> = props => {
     )
   }
 
+  useEffect(() => {
+    if (sessionStorage) {
+      setUserType(sessionStorage.getItem('type'))
+      setAvatar(sessionStorage.getItem('avatar'))
+      setFirstname(sessionStorage.getItem('firstname'))
+      setLastname(sessionStorage.getItem('lastname'))
+    }
+  }, [])
+
   return (
       <>
         <Reload />
         <Style>
             {
-                userType !== 'root' ? getHeaderSideBar() : null
+                getUserType !== 'root' ? getHeaderSideBar() : null
             }
             <div className='side-blocks'>
                 {

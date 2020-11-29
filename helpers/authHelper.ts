@@ -8,7 +8,7 @@ const saveSession = (user: UserInterface, token: string): void => {
   sessionStorage.setItem('firstname', firstname)
   sessionStorage.setItem('lastname', lastname)
   sessionStorage.setItem('avatar', avatar)
-  sessionStorage.setItem('administrador', administrador)
+  sessionStorage.setItem('administrador', String(administrador))
   sessionStorage.setItem('token', token)
   sessionStorage.setItem('type', 'default')
 }
@@ -21,7 +21,7 @@ const saveLocal = (user: UserInterface, token: string): void => {
   localStorage.setItem('firstname', firstname)
   localStorage.setItem('lastname', lastname)
   localStorage.setItem('avatar', avatar)
-  localStorage.setItem('administrador', administrador)
+  localStorage.setItem('administrador', String(administrador))
   localStorage.setItem('token', token)
   localStorage.setItem('type', 'default')
 }

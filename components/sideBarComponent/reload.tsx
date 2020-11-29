@@ -1,8 +1,7 @@
 import { FC, useEffect } from 'react'
-import authHelper from '../helpers/authHelper'
+import authHelper from '../../helpers/authHelper'
 import { useRouter } from 'next/router'
-import axios from '../libs/axios'
-import { toast } from 'react-toastify'
+import axios from '../../libs/axios'
 
 const Reload: FC = () => {
   const router = useRouter()
@@ -34,7 +33,9 @@ const Reload: FC = () => {
   }
 
   useEffect(() => {
-    validate()
+    if (sessionStorage && localStorage) {
+      validate()
+    }
   }, [])
 
   return <></>
