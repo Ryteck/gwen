@@ -8,6 +8,10 @@ display: flex;
 align-items: center;
 justify-content: space-between;
 
+* {
+    color: var(--color-background-light);
+}
+
 main {
     width: 100%;
     display: flex;

@@ -15,7 +15,8 @@ const defaultPages: Array<PageFormat> = [
 ]
 
 const lowPages: Array<PageFormat> = [
-  { title: 'Perfil', path: '/perfil' }
+  { title: 'Perfil', path: '/perfil' },
+  { title: 'Store', path: '/store' }
 ]
 
 const highPages: Array<PageFormat> = [

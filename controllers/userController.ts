@@ -51,7 +51,7 @@ const update = async (
   lastname: string,
   password: string,
   avatar: string,
-  administrador: 'true' | 'false'
+  administrador: boolean | 'true' | 'false'
 ): Promise<void> => {
   if (!await userFunctions.isMemberId(id)) {
     throw 'id não encontrado'
@@ -73,7 +73,7 @@ const update = async (
     .hset(hashId, 'lastname', lastname)
     .hset(hashId, 'password', crypto.generateHash(password))
     .hset(hashId, 'avatar', avatar)
-    .hset(hashId, 'administrador', administrador)
+    .hset(hashId, 'administrador', String(administrador))
     .exec()
 }
 

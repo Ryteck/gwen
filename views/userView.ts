@@ -1,7 +1,7 @@
-import UserModel from '../models/userModel'
+import UserInterface from '../interfaces/userInterface'
 
 const userView = {
-  render (user: UserModel) {
+  render (user: UserInterface) {
     const { id, username, firstname, lastname, avatar, administrador } = user
     return {
       id,
@@ -12,7 +12,7 @@ const userView = {
       administrador: administrador === 'true'
     }
   },
-  renderMany (users: Array<UserModel>) {
+  renderMany (users: Array<UserInterface>) {
     return users.map(user => this.render(user))
   }
 }

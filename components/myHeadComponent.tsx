@@ -9,9 +9,13 @@ const MyHead: FC<MyHeadProps> = props => {
   const { title } = props
   return (
         <Head>
+            <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            />
             <title>
                 {
-                    props.title
+                    title
                 }
             </title>
         </Head>

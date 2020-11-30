@@ -19,6 +19,9 @@ const handle: NextApiHandler = async (req, res) => {
   try {
     const id = String(req.query.id)
     const { username, firstname, lastname } = req.body
+    if (username === 'root') {
+      throw 'o usuário com username root não pode ser criado'
+    }
     await validate(username, firstname, lastname)
     const originalUser = await userController.show(id)
     const tempNewUser = { ...originalUser, username: username, firstname: firstname, lastname: lastname }
