@@ -15,8 +15,8 @@ const generateToken = (data: TokenDataInterface, high: boolean): string =>
 const generateRootToken = (high: boolean): string =>
   generateToken({ userType: 'root' }, high)
 
-const valideToken = (token: string) =>
-  Jwt.verify(token, SECRET)
+const valideToken = (token: string): TokenDataInterface =>
+  Jwt.verify(token, SECRET) as TokenDataInterface
 
 const jwt = { generateDataToken, generateToken, generateRootToken, valideToken }
 

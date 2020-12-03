@@ -1,4 +1,4 @@
-import { FC, FormEvent, KeyboardEvent } from 'react'
+import { FC, FormEvent, KeyboardEvent, useEffect, useState } from 'react'
 import MyHead from '../components/myHeadComponent'
 import Style from '../styles/pages/perfilPageStyle'
 import SideBar from '../components/sideBarComponent'
@@ -7,36 +7,72 @@ import alertUtil from '../utils/alertUtil'
 import { toast } from 'react-toastify'
 
 const Perfil: FC = () => {
-  async function confirmPassword (): Promise<boolean> {
+  const [getUsername, setUsername] = useState('')
+  const [getFirstname, setFirstname] = useState('')
+  const [getLastname, setLastname] = useState('')
+  const [getNewPassword, setNewPassword] = useState('')
+  const [getConfirmNewPassword, setConfirmNewPassword] = useState('')
+
+  async function confirmPassword (): Promise<'cancel' | 'ok' | 'wrong'> {
     return await alertUtil
       .generateConfirmAlert()
-      .then(value => value === '123')
+      .then(value => {
+        if (value === null) {
+          return 'cancel'
+        }
+        return value === '123' ? 'ok' : 'wrong'
+      }
+      )
   }
 
   async function switchAvatar (e: FormEvent) {
     e.preventDefault()
-    if (await confirmPassword()) {
-      toast.success('senha correta')
-    } else {
-      toast.error('senha incorreta')
+    const confirm = await confirmPassword()
+
+    switch (confirm) {
+      case 'cancel':
+        toast.warn('confirmação cancelada')
+        break
+      case 'ok':
+        toast.success('senha correta')
+        break
+      case 'wrong':
+        toast.error('senha incorreta')
+        break
     }
   }
 
   async function saveChanges (e: FormEvent) {
     e.preventDefault()
-    if (await confirmPassword()) {
-      toast.success('senha correta')
-    } else {
-      toast.error('senha incorreta')
+    const confirm = await confirmPassword()
+
+    switch (confirm) {
+      case 'cancel':
+        toast.warn('confirmação cancelada')
+        break
+      case 'ok':
+        toast.success('senha correta')
+        break
+      case 'wrong':
+        toast.error('senha incorreta')
+        break
     }
   }
 
   async function switchPassword (e: FormEvent) {
     e.preventDefault()
-    if (await confirmPassword()) {
-      toast.success('senha correta')
-    } else {
-      toast.error('senha incorreta')
+    const confirm = await confirmPassword()
+
+    switch (confirm) {
+      case 'cancel':
+        toast.warn('confirmação cancelada')
+        break
+      case 'ok':
+        toast.success('senha correta')
+        break
+      case 'wrong':
+        toast.error('senha incorreta')
+        break
     }
   }
 
@@ -46,6 +82,14 @@ const Perfil: FC = () => {
       return false
     }
   }
+
+  useEffect(() => {
+    if (sessionStorage) {
+      setUsername(sessionStorage.getItem('username'))
+      setFirstname(sessionStorage.getItem('firstname'))
+      setLastname(sessionStorage.getItem('lastname'))
+    }
+  }, [])
 
   return (
     <>
@@ -58,15 +102,56 @@ const Perfil: FC = () => {
                   <input type='submit' value='Alterar Imagem'/>
               </form>
               <form onSubmit={saveChanges}>
-                  <input type='text' placeholder='username' className='users-props' onKeyDown={blockEnter}/>
-                  <input type='text' placeholder='firstname' className='users-props' onKeyDown={blockEnter}/>
-                  <input type='text' placeholder='lastname' className='users-props' onKeyDown={blockEnter}/>
-                  <input type='submit' value='Salvar Alterações'/>
+                  <input
+                    type='text'
+                    placeholder='username'
+                    className='users-props'
+                    onKeyDown={blockEnter}
+                    value={getUsername}
+                    onChange={e => setUsername(e.target.value)}
+                  />
+                  <input
+                    type='text'
+                    placeholder='firstname'
+                    className='users-props'
+                    onKeyDown={blockEnter}
+                    value={getFirstname}
+                    onChange={e => setFirstname(e.target.value)}
+                  />
+                  <input
+                    type='text'
+                    placeholder='lastname'
+                    className='users-props'
+                    onKeyDown={blockEnter}
+                    value={getLastname}
+                    onChange={e => setLastname(e.target.value)}
+                  />
+                  <input
+                    type='submit'
+                    value='Salvar Alterações'
+                  />
               </form>
               <form onSubmit={switchPassword}>
-                  <input type='password' placeholder='nova senha' className='users-props' onKeyDown={blockEnter}/>
-                  <input type='password' placeholder='confirmar nova senha' className='users-props' onKeyDown={blockEnter}/>
-                  <input type='submit' value='Trocar de senha'/>
+                  <input
+                    type='password'
+                    placeholder='nova senha'
+                    className='users-props'
+                    onKeyDown={blockEnter}
+                    value={getNewPassword}
+                    onChange={e => setNewPassword(e.target.value)}
+                  />
+                  <input
+                    type='password'
+                    placeholder='confirmar nova senha'
+                    className='users-props'
+                    onKeyDown={blockEnter}
+                    value={getConfirmNewPassword}
+                    onChange={e => setConfirmNewPassword(e.target.value)}
+                  />
+                  <input
+                    type='submit'
+                    value='Trocar de senha'
+                  />
               </form>
           </main>
       </Style>

@@ -2,6 +2,7 @@ import { NextApiHandler } from 'next'
 import userController from '../../../../../controllers/userController'
 import * as Yup from 'yup'
 import userView from '../../../../../views/userView'
+import UserInterface from '../../../../../interfaces/userInterface'
 
 const validate = async (username: string, firstname: string, lastname: string): Promise<void> => {
   const data = { username, firstname, lastname }
@@ -24,7 +25,7 @@ const handle: NextApiHandler = async (req, res) => {
     }
     await validate(username, firstname, lastname)
     const originalUser = await userController.show(id)
-    const tempNewUser = { ...originalUser, username: username, firstname: firstname, lastname: lastname }
+    const tempNewUser: UserInterface = { ...originalUser, username: username, firstname: firstname, lastname: lastname }
     await userController.update(
       id,
       tempNewUser.username,
