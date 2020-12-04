@@ -1,7 +1,7 @@
 import jwt from '../libs/jwt'
 import MiddlewareType from '../types/middlewareType'
 
-const handle: MiddlewareType = async (req): Promise<void> => {
+const authenticationMiddleware: MiddlewareType = async (req): Promise<void> => {
   const { authorization } = req.headers
 
   if (!authorization) {
@@ -11,4 +11,4 @@ const handle: MiddlewareType = async (req): Promise<void> => {
   req.body.authorization = jwt.valideToken(authorization)
 }
 
-export default handle
+export default authenticationMiddleware

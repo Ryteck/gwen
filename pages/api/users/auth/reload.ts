@@ -1,11 +1,11 @@
 import { NextApiHandler } from 'next'
-import jwt from '../../../../libs/jwt'
+import authenticationMiddleware from '../../../../middlewares/authenticationMiddleware'
 
 const handle: NextApiHandler = async (req, res) => {
   try {
-    const { token } = req.body
-    const data = jwt.valideToken(token)
-    return res.status(200).json({ data })
+    await authenticationMiddleware(req)
+    const { authorization } = req.body
+    return res.status(200).json({ authorization })
   } catch (error) {
     return res.status(200).json({ error: String(error) })
   }

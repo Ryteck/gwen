@@ -1,5 +1,4 @@
 import redis from '../libs/redis'
-import crypto from '../libs/crypto'
 import userConfig from '../config/userConfig'
 import userFunctions from '../functions/userFunctions'
 import UserInterface from '../interfaces/userInterface'
@@ -71,7 +70,7 @@ const update = async (
     .hset(hashId, 'username', username)
     .hset(hashId, 'firstname', firstname)
     .hset(hashId, 'lastname', lastname)
-    .hset(hashId, 'password', crypto.generateHash(password))
+    .hset(hashId, 'password', password)
     .hset(hashId, 'avatar', avatar)
     .hset(hashId, 'administrador', String(administrador))
     .exec()

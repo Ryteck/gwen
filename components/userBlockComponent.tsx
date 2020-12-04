@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import Style from '../styles/components/userBlockComponentStyle'
-import { FaCrown, FaRegSave, FaSave, FaSyncAlt, FaTrash, FaUser } from 'react-icons/fa'
+import { FaCrown, FaRegSave, FaSyncAlt, FaTrash, FaUser } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import axios from '../libs/axios'
 import Router from 'next/router'

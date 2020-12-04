@@ -17,8 +17,9 @@ const Reload: FC = () => {
       }
 
       const token = sessionStorage.getItem('token')
+
       await axios
-        .post('users/auth/reload', { token })
+        .post('users/auth/reload', {}, { headers: { authorization: token } })
         .then(({ data }) => {
           const { error } = data
           if (error) throw error

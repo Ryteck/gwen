@@ -30,18 +30,29 @@ interface SideBarProps {
 const SideBar: FC<SideBarProps> = props => {
   const { activePath } = props
 
+  const [getPageBlocksMenu, setPageBlocksMenu] = useState<Array<PageFormat>>([])
+
   const [getUserType, setUserType] = useState('')
   const [getAvatar, setAvatar] = useState('')
   const [getFirstname, setFirstname] = useState('')
   const [getLastname, setLastname] = useState('')
 
-  function getPageBlocksMenu (): Array<PageFormat> {
-    let pages = []
-    pages = pages.concat(defaultPages)
-    pages = pages.concat(lowPages)
-    pages = pages.concat(highPages)
-    return pages
-  }
+  useEffect(() => {
+    if (sessionStorage) {
+      const type = sessionStorage.getItem('type')
+      const administrador = sessionStorage.getItem('administrador') === 'true'
+
+      if (type === 'root') {
+        setPageBlocksMenu([...defaultPages, ...highPages])
+      } else {
+        if (administrador) {
+          setPageBlocksMenu([...defaultPages, ...highPages, ...lowPages])
+        } else {
+          setPageBlocksMenu([...defaultPages, ...lowPages])
+        }
+      }
+    }
+  }, [])
 
   function getAvatarUrl (): string {
     return `/${getAvatar}`
@@ -82,7 +93,7 @@ const SideBar: FC<SideBarProps> = props => {
             }
             <div className='side-blocks'>
                 {
-                    getPageBlocksMenu().map(pageBlock => {
+                    getPageBlocksMenu.map(pageBlock => {
                       const { title, path } = pageBlock
                       return <PageBlock title={title} path={path} active={activePath === path} key={title} />
                     })
