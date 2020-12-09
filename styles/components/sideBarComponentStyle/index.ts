@@ -11,7 +11,7 @@ justify-content: space-between;
 
 .side-header {
     width: 100%;
-    height: 250px;
+    height: 200px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -24,6 +24,7 @@ justify-content: space-between;
     }
     
     span {
+      margin-top: 20px;
       font-size: 20px;
     }
 }
@@ -31,10 +32,10 @@ justify-content: space-between;
 .side-blocks {
   width: 100%;
   height: 100%;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   grid-gap: 20px;
-  grid-template-columns: 1fr;
-  justify-content: space-between;
+  justify-content: initial;
   overflow-y: auto;
   margin-top: 20px;
   scrollbar-width: none;

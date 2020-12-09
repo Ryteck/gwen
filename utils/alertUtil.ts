@@ -1,7 +1,5 @@
 import swal from 'sweetalert'
 
-type IConAlert = 'warning' | 'error' | 'success' | 'info'
-
 const generateConfirmAlert = (): Promise<any> => {
   return swal({
     title: 'Confirme a sua senha',

@@ -65,7 +65,7 @@ const SideBar: FC<SideBarProps> = props => {
   function getHeaderSideBar () {
     return (
           <div className='side-header'>
-              <Image src={getAvatarUrl()} width={200} height={200} className='avatar'/>
+              <Image src={getAvatarUrl()} width={100} height={100} className='avatar'/>
               <span>
                     {
                         getFullName()
