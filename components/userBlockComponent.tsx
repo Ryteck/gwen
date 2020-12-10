@@ -2,7 +2,7 @@ import { FC, useState } from 'react'
 import Style from '../styles/components/userBlockComponentStyle'
 import { FaCrown, FaRegSave, FaSyncAlt, FaTrash, FaUser } from 'react-icons/fa'
 import { toast } from 'react-toastify'
-import axios from '../libs/axios'
+import api from '../libs/api'
 import Router from 'next/router'
 
 interface UserBlockInterface {
@@ -24,7 +24,7 @@ const UserBlock: FC<UserBlockInterface> = props => {
   async function switchUserAdm () {
     const newAdmValue = !getAdministrador
     try {
-      await axios
+      await api
         .patch(`users/patch/changeLevel/${id}`, { administrador: newAdmValue })
         .then(({ data }) => {
           const { error } = data
@@ -45,7 +45,7 @@ const UserBlock: FC<UserBlockInterface> = props => {
       lastname: getLastname
     }
     try {
-      await axios
+      await api
         .put(`users/rest/update/${id}`, data)
         .then(({ data }) => {
           const { error } = data
@@ -60,7 +60,7 @@ const UserBlock: FC<UserBlockInterface> = props => {
 
   async function resetUser () {
     try {
-      await axios
+      await api
         .patch(`users/patch/resetPassword/${id}`)
         .then(({ data }) => {
           const { error } = data
@@ -75,7 +75,7 @@ const UserBlock: FC<UserBlockInterface> = props => {
 
   async function destroyUser () {
     try {
-      await axios
+      await api
         .post(`users/rest/destroy/${id}`)
         .then(({ data }) => {
           const { error } = data

@@ -13,7 +13,11 @@ const userView = {
     }
   },
   renderMany (users: Array<UserInterface>) {
-    return users.map(user => this.render(user))
+    const renders = []
+    for (let i = 0; i < users.length; i++) {
+      renders.push(this.render(users[i]))
+    }
+    return renders
   }
 }
 

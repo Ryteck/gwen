@@ -2,13 +2,13 @@ import { NextApiHandler } from 'next'
 import userController from '../../../../../controllers/userController'
 import UserInterface from '../../../../../interfaces/userInterface'
 import userView from '../../../../../views/userView'
-import crypto from '../../../../../libs/crypto'
+import hash from '../../../../../libs/hash'
 
 const handle: NextApiHandler = async (req, res) => {
   try {
     const id = String(req.query.id)
     const originalUser = await userController.show(id)
-    const tempNewUser: UserInterface = { ...originalUser, password: crypto.generateDefaultPassword() }
+    const tempNewUser: UserInterface = { ...originalUser, password: hash.generateDefaultPassword() }
     await userController.update(
       id,
       tempNewUser.username,

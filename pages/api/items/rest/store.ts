@@ -28,17 +28,17 @@ const handle: NextApiHandler = async (req, res) => {
 
     const id = await idHelper.generateNewId()
 
-    const moment = new Date()
+    const when = new Date()
 
     await itemController.store(
       id,
       name,
       user,
-      moment
+      when
     )
 
     const item = await itemController.show(id)
-    res.status(200).json({ item: itemView.render(item) })
+    res.status(200).json({ item: await itemView.render(item) })
   } catch (error) {
     res.status(200).json({ error: String(error) })
   }

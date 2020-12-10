@@ -3,12 +3,12 @@ import { useRouter } from 'next/router'
 import CheckBox from '../components/checkBoxComponent'
 import MyHead from '../components/myHeadComponent'
 import Style from '../styles/pages/indexPageStyle'
-import axios from '../libs/axios'
+import api from '../libs/api'
 import { toast } from 'react-toastify'
 import UserInterface from '../interfaces/userInterface'
 import authHelper from '../helpers/authHelper'
 
-interface AxiosLoginResponse {
+interface ApiLoginResponse {
   token: string;
   user: UserInterface;
   error?: any;
@@ -30,8 +30,8 @@ const Index: FC = () => {
         high: getLongTime
       }
       const { token, user } =
-          await axios
-            .post<AxiosLoginResponse>('users/auth/login', data)
+          await api
+            .post<ApiLoginResponse>('users/auth/login', data)
             .then(({ data }) => {
               const { error } = data
               if (error) throw error

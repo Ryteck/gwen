@@ -19,7 +19,7 @@ const store = async (
   id: string | number,
   name: string,
   user: string | number,
-  moment: Date
+  when: Date
 ): Promise<void> => {
   if (await itemFunctions.isMemberName(name)) {
     throw 'nome já existe'
@@ -33,7 +33,7 @@ const store = async (
     .hset(hashId, 'id', id)
     .hset(hashId, 'name', name)
     .hset(hashId, 'user', user)
-    .hset(hashId, 'moment', String(moment))
+    .hset(hashId, 'when', String(when))
     .exec()
 }
 
@@ -41,7 +41,7 @@ const update = async (
   id: string | number,
   name: string,
   user: string | number,
-  moment: Date
+  when: Date
 ): Promise<void> => {
   if (!await itemFunctions.isMemberId(id)) {
     throw 'id não encontrado'
@@ -61,7 +61,7 @@ const update = async (
     .hset(hashId, 'id', id)
     .hset(hashId, 'name', name)
     .hset(hashId, 'user', user)
-    .hset(hashId, 'moment', String(moment))
+    .hset(hashId, 'when', String(when))
     .exec()
 }
 

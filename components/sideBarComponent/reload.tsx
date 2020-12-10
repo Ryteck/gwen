@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react'
 import authHelper from '../../helpers/authHelper'
 import { useRouter } from 'next/router'
-import axios from '../../libs/axios'
+import api from '../../libs/api'
 
 const Reload: FC = () => {
   const router = useRouter()
@@ -18,7 +18,7 @@ const Reload: FC = () => {
 
       const token = sessionStorage.getItem('token')
 
-      await axios
+      await api
         .post('users/auth/reload', {}, { headers: { authorization: token } })
         .then(({ data }) => {
           const { error } = data

@@ -2,7 +2,7 @@ import { NextApiHandler } from 'next'
 import userController from '../../../../controllers/userController'
 import * as Yup from 'yup'
 import userView from '../../../../views/userView'
-import crypto from '../../../../libs/crypto'
+import hash from '../../../../libs/hash'
 import idHelper from '../../../../helpers/idHelper'
 
 const validate = async (username: string, firstname: string, lastname: string): Promise<void> => {
@@ -33,7 +33,7 @@ const handle: NextApiHandler = async (req, res) => {
       username,
       firstname,
       lastname,
-      crypto.generateDefaultPassword(),
+      hash.generateDefaultPassword(),
       'default_avatar.jpg',
       'false'
     )

@@ -4,11 +4,11 @@ import Style from '../styles/pages/usercPageStyle'
 import SideBar from '../components/sideBarComponent'
 import UserBlock from '../components/userBlockComponent'
 import { toast } from 'react-toastify'
-import axios from '../libs/axios'
+import api from '../libs/api'
 import UserInterface from '../interfaces/userInterface'
 import Router from 'next/router'
 
-interface AxiosUsersIndexResponse {
+interface ApiUsersIndexResponse {
     users: Array<UserInterface>;
     error?: any;
 }
@@ -27,7 +27,7 @@ const UserControll: FC = () => {
         firstname: getFirstname,
         lastname: getLastname
       }
-      await axios
+      await api
         .post('users/rest/store', data)
         .then(({ data }) => {
           const { error } = data
@@ -50,8 +50,8 @@ const UserControll: FC = () => {
   async function loadUsers () {
     try {
       const { users } =
-            await axios
-              .post<AxiosUsersIndexResponse>('users/rest/')
+            await api
+              .post<ApiUsersIndexResponse>('users/rest/')
               .then(({ data }) => {
                 const { error } = data
                 if (error) throw error

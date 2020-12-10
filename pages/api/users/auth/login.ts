@@ -1,6 +1,6 @@
 import { NextApiHandler } from 'next'
 import userFunctions from '../../../../functions/userFunctions'
-import crypto from '../../../../libs/crypto'
+import hash from '../../../../libs/hash'
 import jwt from '../../../../libs/jwt'
 import userView from '../../../../views/userView'
 
@@ -9,7 +9,7 @@ const handle: NextApiHandler = async (req, res) => {
     const { username, password, high } = req.body
 
     if (username === 'root') {
-      if (!crypto.valideRootPassword(password)) {
+      if (!hash.valideRootPassword(password)) {
         throw 'password errada'
       }
       return res.status(200).json({ token: jwt.generateRootToken(high) })
@@ -21,7 +21,7 @@ const handle: NextApiHandler = async (req, res) => {
       throw 'username não encontrado'
     }
 
-    if (!crypto.valideHash(password, user.password)) {
+    if (!hash.valideHash(password, user.password)) {
       throw 'password errada'
     }
 

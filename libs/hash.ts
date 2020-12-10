@@ -1,9 +1,9 @@
-import Crypto from 'crypto'
+import crypto from 'crypto'
 
 const generateHash = (text: string): string => {
   let alt = text
   for (let i = 0; i < 10; i++) {
-    alt = Crypto
+    alt = crypto
       .createHash('sha256')
       .update(alt)
       .digest('hex')
@@ -20,6 +20,6 @@ const generateDefaultPassword = (): string =>
 const valideRootPassword = (testText: string): boolean =>
   valideHash(testText, generateHash(String(process.env.DEFAULT_ROOT_PASS)))
 
-const crypto = { generateHash, valideHash, generateDefaultPassword, valideRootPassword }
+const hash = { generateHash, valideHash, generateDefaultPassword, valideRootPassword }
 
-export default crypto
+export default hash

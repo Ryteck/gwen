@@ -28,11 +28,11 @@ const handle: NextApiHandler = async (req, res) => {
       id,
       tempNewItem.name,
       tempNewItem.user,
-      tempNewItem.moment
+      tempNewItem.when
     )
 
     const newItem = await itemController.show(id)
-    res.status(200).json({ item: itemView.render(newItem) })
+    res.status(200).json({ item: await itemView.render(newItem) })
   } catch (error) {
     res.status(200).json({ error: String(error) })
   }
