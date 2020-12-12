@@ -1,8 +1,8 @@
 import UserInterface from '../interfaces/userInterface'
 import redis from '../libs/redis'
-import userConfig from '../config/userConfig'
+import redisConfig from '../config/redisConfig'
 
-const { listUsers } = userConfig
+const { listUsers } = redisConfig.tables.user
 
 const formatHashId = (id: string | number): string =>
     `user:${id}`

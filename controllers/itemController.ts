@@ -1,9 +1,9 @@
 import redis from '../libs/redis'
-import itemConfig from '../config/itemConfig'
+import redisConfig from '../config/redisConfig'
 import itemFunctions from '../functions/itemFunctions'
 import ItemInterface from '../interfaces/itemInterface'
 
-const { listItems } = itemConfig
+const { listItems } = redisConfig.tables.item
 
 const index = async (): Promise<Array<ItemInterface>> =>
   await itemFunctions.getAllItems()

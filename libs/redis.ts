@@ -1,7 +1,7 @@
 import Redis from 'ioredis'
 import redisConfig from '../config/redisConfig'
 
-const { host, port, pass } = redisConfig
+const { host, port, pass } = redisConfig.connection
 
 const redis = new Redis({
   host: host,

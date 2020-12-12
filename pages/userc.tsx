@@ -6,7 +6,6 @@ import UserBlock from '../components/userBlockComponent'
 import { toast } from 'react-toastify'
 import api from '../libs/api'
 import UserInterface from '../interfaces/userInterface'
-import Router from 'next/router'
 
 interface ApiUsersIndexResponse {
     users: Array<UserInterface>;
@@ -18,34 +17,6 @@ const UserControll: FC = () => {
   const [getUsername, setUsername] = useState('')
   const [getFirstname, setFirstname] = useState('')
   const [getLastname, setLastname] = useState('')
-
-  async function add (e: FormEvent) {
-    e.preventDefault()
-    try {
-      const data = {
-        username: getUsername,
-        firstname: getFirstname,
-        lastname: getLastname
-      }
-      await api
-        .post('users/rest/store', data)
-        .then(({ data }) => {
-          const { error } = data
-          if (error) throw error
-        })
-        .catch(error => { throw error })
-      Router.reload()
-    } catch (error) {
-      toast.error(String(error))
-    }
-  }
-
-  function blockEnter (e: KeyboardEvent) {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      return false
-    }
-  }
 
   async function loadUsers () {
     try {
@@ -62,6 +33,34 @@ const UserControll: FC = () => {
       setUsers(users)
     } catch (error) {
       toast.error(String(error))
+    }
+  }
+
+  async function add (e: FormEvent) {
+    e.preventDefault()
+    try {
+      const data = {
+        username: getUsername,
+        firstname: getFirstname,
+        lastname: getLastname
+      }
+      await api
+        .post('users/rest/store', data)
+        .then(({ data }) => {
+          const { error } = data
+          if (error) throw error
+        })
+        .catch(error => { throw error })
+      loadUsers()
+    } catch (error) {
+      toast.error(String(error))
+    }
+  }
+
+  function blockEnter (e: KeyboardEvent) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      return false
     }
   }
 

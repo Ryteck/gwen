@@ -4,7 +4,7 @@ import Style from '../styles/pages/storePageStyle'
 import SideBar from '../components/sideBarComponent'
 import StorePageTable from '../components/storePageTableComponent'
 
-type StorePages = 'current' | 'input' | 'output' | 'tools'
+type StorePages = 'current' | 'input' | 'output' | 'loan' | 'tools'
 
 const Store: FC = () => {
   const [getStorePage, setStorePage] = useState<StorePages>('current')
@@ -36,6 +36,13 @@ const Store: FC = () => {
                   className={getStorePage === 'output' ? 'active' : 'desactive'}
                   onClick={() => setStorePage('output')}
                   disabled={getStorePage === 'output'}
+                />
+                <input
+                  type='button'
+                  value='loan'
+                  className={getStorePage === 'loan' ? 'active' : 'desactive'}
+                  onClick={() => setStorePage('loan')}
+                  disabled={getStorePage === 'loan'}
                 />
                 <input
                   type='button'

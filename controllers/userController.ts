@@ -1,9 +1,9 @@
 import redis from '../libs/redis'
-import userConfig from '../config/userConfig'
+import redisConfig from '../config/redisConfig'
 import userFunctions from '../functions/userFunctions'
 import UserInterface from '../interfaces/userInterface'
 
-const { listUsers } = userConfig
+const { listUsers } = redisConfig.tables.user
 
 const index = async (): Promise<Array<UserInterface>> =>
   await userFunctions.getAllUsers()

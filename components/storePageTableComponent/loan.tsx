@@ -1,11 +1,11 @@
 import { FC } from 'react'
 
-const Tools: FC = () => {
+const Loan: FC = () => {
   return (
     <>
-      Tools
+      Loan
     </>
   )
 }
 
-export default Tools
+export default Loan

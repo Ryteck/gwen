@@ -5,6 +5,7 @@ import SideBar from '../components/sideBarComponent'
 import Image from 'next/image'
 import alertUtil from '../utils/alertUtil'
 import { toast } from 'react-toastify'
+import api from '../libs/api'
 
 const Perfil: FC = () => {
   const [getUsername, setUsername] = useState('')
@@ -14,13 +15,34 @@ const Perfil: FC = () => {
   const [getConfirmNewPassword, setConfirmNewPassword] = useState('')
 
   async function confirmPassword (): Promise<'cancel' | 'ok' | 'wrong'> {
+    const login = async value => {
+      try {
+        const data = {
+          username: sessionStorage.getItem('username'),
+          password: value
+        }
+        await api
+          .post('users/auth/login', data)
+          .then(({ data }) => {
+            const { error } = data
+            if (error) throw error
+            return data
+          })
+          .catch(error => { throw error })
+        return true
+      } catch (e) {
+        console.log(e)
+        return false
+      }
+    }
+
     return await alertUtil
       .generateConfirmAlert()
-      .then(value => {
+      .then(async value => {
         if (value === null) {
           return 'cancel'
         }
-        return value === '123' ? 'ok' : 'wrong'
+        return await login(value) ? 'ok' : 'wrong'
       }
       )
   }
@@ -51,7 +73,32 @@ const Perfil: FC = () => {
         toast.warn('confirmação cancelada')
         break
       case 'ok':
-        toast.success('senha correta')
+        try {
+          const data = {
+            username: getUsername,
+            firstname: getFirstname,
+            lastname: getLastname
+          }
+          await api
+            .put(`users/rest/update/${sessionStorage.getItem('id')}`, data)
+            .then(({ data }) => {
+              const { error } = data
+              if (error) throw error
+            })
+            .catch(error => { throw error })
+          sessionStorage.setItem('username', getUsername)
+          sessionStorage.setItem('firstname', getFirstname)
+          sessionStorage.setItem('lastname', getLastname)
+          const type = localStorage.getItem('type')
+          if (type) {
+            localStorage.setItem('username', getUsername)
+            localStorage.setItem('firstname', getFirstname)
+            localStorage.setItem('lastname', getLastname)
+          }
+          toast.info('Usuário alterado')
+        } catch (error) {
+          toast.error(String(error))
+        }
         break
       case 'wrong':
         toast.error('senha incorreta')
@@ -61,6 +108,19 @@ const Perfil: FC = () => {
 
   async function switchPassword (e: FormEvent) {
     e.preventDefault()
+
+    if (getNewPassword === '') {
+      return toast.error('primeiro campo vazio')
+    }
+
+    if (getConfirmNewPassword === '') {
+      return toast.error('segundo campo vazio')
+    }
+
+    if (getNewPassword !== getConfirmNewPassword) {
+      return toast.error('senhas não correspondem')
+    }
+
     const confirm = await confirmPassword()
 
     switch (confirm) {
@@ -68,7 +128,21 @@ const Perfil: FC = () => {
         toast.warn('confirmação cancelada')
         break
       case 'ok':
-        toast.success('senha correta')
+        try {
+          const data = {
+            password: getNewPassword
+          }
+          await api
+            .put(`users/patch/changePassword/${sessionStorage.getItem('id')}`, data)
+            .then(({ data }) => {
+              const { error } = data
+              if (error) throw error
+            })
+            .catch(error => { throw error })
+          toast.info('senha alterada')
+        } catch (error) {
+          toast.error(String(error))
+        }
         break
       case 'wrong':
         toast.error('senha incorreta')

@@ -3,7 +3,6 @@ import Style from '../styles/components/userBlockComponentStyle'
 import { FaCrown, FaRegSave, FaSyncAlt, FaTrash, FaUser } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import api from '../libs/api'
-import Router from 'next/router'
 
 interface UserBlockInterface {
     id: string | number;
@@ -20,6 +19,7 @@ const UserBlock: FC<UserBlockInterface> = props => {
   const [getFirstname, setFirstname] = useState(firstname)
   const [getLastname, setLastname] = useState(lastname)
   const [getAdministrador, setAdministrador] = useState(administrador)
+  const [getDestroyed, setDestroyed] = useState(false)
 
   async function switchUserAdm () {
     const newAdmValue = !getAdministrador
@@ -32,7 +32,6 @@ const UserBlock: FC<UserBlockInterface> = props => {
         })
         .catch(error => { throw error })
       setAdministrador(newAdmValue)
-      Router.reload()
     } catch (error) {
       toast.error(String(error))
     }
@@ -52,7 +51,7 @@ const UserBlock: FC<UserBlockInterface> = props => {
           if (error) throw error
         })
         .catch(error => { throw error })
-      Router.reload()
+      toast.info(`Usuário ${firstname} ${lastname} alterado`)
     } catch (error) {
       toast.error(String(error))
     }
@@ -82,13 +81,16 @@ const UserBlock: FC<UserBlockInterface> = props => {
           if (error) throw error
         })
         .catch(error => { throw error })
-      Router.reload()
+      toast.info(`Usuário ${firstname} ${lastname} apagado`)
+      setDestroyed(true)
     } catch (error) {
       toast.error(String(error))
     }
   }
 
-  return (
+  return getDestroyed
+    ? <></>
+    : (
       <Style>
           <div className='block-container'>
             <input placeholder='username' value={getUsername} onChange={e => setUsername(e.target.value)}/>
@@ -108,7 +110,7 @@ const UserBlock: FC<UserBlockInterface> = props => {
             </div>
           </div>
       </Style>
-  )
+      )
 }
 
 export default UserBlock

@@ -66,10 +66,11 @@ main {
       width: 100%;
       height: 100%;
       margin-top: 100px;
-      display: grid;
+      display: flex;
+      flex-direction: column;
+      justify-content: initial;
       grid-gap: 50px;
       overflow: auto;
-      grid-template-columns: 1fr;
       scrollbar-width: none;
       -ms-overflow-style: none;
       ::-webkit-scrollbar {
