@@ -20,9 +20,21 @@ const Table: FC<TableProps> = props => {
             columns={columns}
             data={data}
             editable={{
-              onRowAdd: newData => new Promise((resolve, reject) => setTimeout(store(resolve, reject, newData), 1000)),
-              onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => setTimeout(update(resolve, reject, newData, oldData), 1000)),
-              onRowDelete: oldData => new Promise((resolve, reject) => setTimeout(destroy(resolve, reject, oldData), 1000))
+              onRowAdd: newData =>
+                new Promise((resolve, reject) =>
+                  setTimeout(() =>
+                    store(resolve as () =>
+                    void, reject, newData), 1000)),
+              onRowUpdate: (newData, oldData) =>
+                new Promise((resolve, reject) =>
+                  setTimeout(() =>
+                    update(resolve as () =>
+                    void, reject, newData, oldData), 1000)),
+              onRowDelete: oldData =>
+                new Promise((resolve, reject) =>
+                  setTimeout(() =>
+                    destroy(resolve as () =>
+                      void, reject, oldData), 1000))
             }}
             options={{
               exportButton: true,
