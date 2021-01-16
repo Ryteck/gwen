@@ -22,7 +22,7 @@ const handle: NextApiHandler = async (req, res) => {
 
     await validate(name, user)
 
-    if (!userFunctions.isMemberId(user)) {
+    if (!(await userFunctions.isMemberId(user))) {
       throw 'user not found'
     }
 

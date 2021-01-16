@@ -12,7 +12,7 @@ const show = async (id: string | number): Promise<ItemInterface> => {
   if (!await itemFunctions.isMemberId(id)) {
     throw 'id não encontrado'
   }
-  return Object(await redis.hgetall(itemFunctions.formatHashId(id))) as ItemInterface
+  return Object(await redis.hgetall(itemFunctions.formatHashId(id)))
 }
 
 const store = async (

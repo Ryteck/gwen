@@ -44,11 +44,17 @@ const Current: FC = () => {
 
   const store = async (resolve: () => void, reject: () => void, newData: any): Promise<void> => {
     try {
-      console.log(newData)
       await api
         .post('items/rest/store', {
           name: newData.name,
           user: sessionStorage.getItem('id')
+        })
+        .then(({ data }) => {
+          const { error } = data
+          if (error) throw error
+        })
+        .catch(error => {
+          throw error
         })
       loadData()
       resolve()
@@ -59,7 +65,21 @@ const Current: FC = () => {
   }
 
   const update = async (resolve: () => void, reject: () => void, newData: any, oldData: any): Promise<void> => {
+    if (newData.name === oldData.name) return resolve()
     try {
+      await api
+        .post(`items/rest/update/${newData.id}`,
+          {
+            name: newData.name
+          }
+        )
+        .then(({ data }) => {
+          const { error } = data
+          if (error) throw error
+        })
+        .catch(error => {
+          throw error
+        })
       loadData()
       resolve()
     } catch (error) {
@@ -70,6 +90,15 @@ const Current: FC = () => {
 
   const destroy = async (resolve: () => void, reject: () => void, oldData: any): Promise<void> => {
     try {
+      await api
+        .post(`items/rest/destroy/${oldData.id}`)
+        .then(({ data }) => {
+          const { error } = data
+          if (error) throw error
+        })
+        .catch(error => {
+          throw error
+        })
       loadData()
       resolve()
     } catch (error) {
