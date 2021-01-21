@@ -21,7 +21,7 @@ Gwen é um software primariamente (e por enquanto apenas) de estoque com capacid
 | DEFAULT_USER_PASS 	| Senha padrão dos usuários 	|
 | DEFAULT_ROOT_PASS 	| Senha do Root 	|
 
-6. Rodar o comando yarn build (ou npx build) seguido pelo yarn start (ou npx start)
+6. Rodar o comando yarn build (ou npm run build) seguido pelo yarn start (ou npm run start)
 
 ## Tecnologias
 
