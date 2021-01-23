@@ -12,7 +12,7 @@ const validate = async (item: string, origin: string, quantity: number, user: st
   const schema = Yup.object().shape({
     item: Yup.string().required(),
     origin: Yup.string().required(),
-    quantity: Yup.number().required(),
+    quantity: Yup.number().required().positive(),
     user: Yup.string().required()
   })
 

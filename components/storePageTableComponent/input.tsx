@@ -82,7 +82,24 @@ const Input: FC = () => {
   }
 
   const update = async (resolve: () => void, reject: () => void, newData: any, oldData: any): Promise<void> => {
+    if (
+      newData.item === oldData.item &&
+      newData.origin === oldData.origin &&
+      newData.quantity === oldData.quantity
+    ) return resolve()
     try {
+      const { id, item, origin, quantity } = newData
+      await api
+        .post(`inputs/rest/update/${id}`,
+          { item, origin, quantity }
+        )
+        .then(({ data }) => {
+          const { error } = data
+          if (error) throw error
+        })
+        .catch(error => {
+          throw error
+        })
       loadData()
       resolve()
     } catch (error) {
@@ -93,6 +110,16 @@ const Input: FC = () => {
 
   const destroy = async (resolve: () => void, reject: () => void, oldData: any): Promise<void> => {
     try {
+      const { id } = oldData
+      await api
+        .post(`inputs/rest/destroy/${id}`)
+        .then(({ data }) => {
+          const { error } = data
+          if (error) throw error
+        })
+        .catch(error => {
+          throw error
+        })
       loadData()
       resolve()
     } catch (error) {
