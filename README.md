@@ -1,4 +1,4 @@
-# ![Spider Gwen drawing](https://gwen.vercel.app/favicon.ico) Gwen
+# ![Spider Gwen drawing](https://raw.githubusercontent.com/ryteck/gwen/main/public/favicon.ico) Gwen
 
 
 Gwen é um software primariamente (e por enquanto apenas) de estoque com capacidades expansivas no design para implementação de futuras novas ferramentas.
